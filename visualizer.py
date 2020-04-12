@@ -2,7 +2,7 @@ import csv
 import random as r
 import turtle as t
 
-#Dictionary for IPs
+#Dictionary for source IPs
 ip_dict = {}
 #Set keeps track of all the ips, no duplicates
 ip_set = set()
@@ -12,8 +12,10 @@ ip_screen = {}
 screen = t.Screen()
 screen.screensize(400,300)
 
+visited_dict = {}
+
 #Reads from CSV files
-with open('log.csv', 'r') as csv_file:
+with open('test.csv', 'r') as csv_file:
     csv_reader = csv.reader(csv_file)
 
     next(csv_reader)
@@ -33,6 +35,7 @@ with open('log.csv', 'r') as csv_file:
             if ip_dict[line[0]][0] == line[1]:
                 ip_dict[line[0]][1] = line[2]
 
+    #print(ip_set)
     #Draw each "circle" for each IP
     for item in ip_set:
         #print(key + " goes to" + ip_dict[key][0] + " and exchanged " +
@@ -43,9 +46,9 @@ with open('log.csv', 'r') as csv_file:
         rand_y = r.randrange(-300,300,1)
         ip_screen[item] = (rand_x, rand_y)
         #Sets the turtle color to red and its shape to a circle of size 2
-        t.color("red")
+        t.color("purple")
         t.shape("circle")
-        t.shapesize(1.5)
+        t.shapesize(1)
         #Lifts the "pen" so no line is drawn when moving the turtle
         t.penup()
         #Move the turtle to the randomized coordinates and stamp (paint the circle)
@@ -59,14 +62,16 @@ with open('log.csv', 'r') as csv_file:
     #print(ip_screen)
     #Recreates a smaller turtle to show the communication between IPs
     t.shapesize(0.20)
-    t.color("blue")
+    t.color("orange")
     t.shape("square")
     
     for key in ip_dict:
         #Hide the turtle while moving to a new location and increase the speed to move faster
-        t.speed(10)
         t.hideturtle()
+        t.speed(10)
         t.penup()
+        dest_ip = ip_dict[key][0]
+        
         #The new position will be given by the randomized values stored in the screen dictionary, mapped to the IP (key)
         t.setpos(ip_screen[key][0], ip_screen[key][1])
         t.showturtle()
@@ -75,10 +80,22 @@ with open('log.csv', 'r') as csv_file:
         t.pendown()
         #New position is the destination source of the current key. Accessed via the IP dictionary, and reused by the
         #screen dictionary to find its coordinates.
-        t.setpos(ip_screen[ip_dict[key][0]][0], ip_screen[ip_dict[key][0]][1])
-        t.stamp()
-        t.write(ip_dict[key][1], font=("Arial", 10, "bold"))
-        t.speed(5)
+
+        if dest_ip not in visited_dict:
+            t.color("orange")
+            t.setpos(ip_screen[ip_dict[key][0]][0], ip_screen[ip_dict[key][0]][1])
+            t.stamp()
+            t.penup()
+            t.setpos(ip_screen[ip_dict[key][0]][0], ip_screen[ip_dict[key][0]][1] - 40)  
+            t.write("Packages: " + ip_dict[key][1], font=("Arial", 12, "bold"))
+            visited_dict[dest_ip] = 1
+        else:
+            t.color("green")
+            t.setpos(ip_screen[ip_dict[key][0]][0], ip_screen[ip_dict[key][0]][1])
+            t.stamp()
+            t.penup()
+            t.setpos(ip_screen[ip_dict[key][0]][0], ip_screen[ip_dict[key][0]][1] + 40)
+            t.write("Packages: "+ ip_dict[key][1], font=("Arial", 12, "bold"))
 
     t.penup()
     t.hideturtle()
