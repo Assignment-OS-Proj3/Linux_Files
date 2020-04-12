@@ -22,7 +22,7 @@ Type the following commands into the terminal to run the lkm:
 
 What I did to get the output file was move the dmesg to a .csv file,  using the command
 
-    ~$ dmesg > log.csv
+    ~$ dmesg -t > log.csv
 
 Once the output file is created, we can remove the module off the kernel using `~$ sudo rmmod lkm.ko` and move on to show our communications using the visualizer tool.
 
