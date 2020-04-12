@@ -17,7 +17,7 @@ def visualizerTool():
     visited_dict = {}
 
     #Reads from CSV files
-    with open('test.csv', 'r') as csv_file:
+    with open('log.csv', 'r') as csv_file:
         csv_reader = csv.reader(csv_file)
 
         next(csv_reader)
